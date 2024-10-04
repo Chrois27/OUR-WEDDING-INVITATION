@@ -1,0 +1,27 @@
+.footer {
+    padding: 2rem;
+    background-color: #f0f0f0;
+    text-align: center;
+  }
+  
+  .shareButton, .paperInvitationLink {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .paperInvitationLink {
+    background-color: #2ecc71;
+  }
+  
+  .copyright {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #777;
+  }

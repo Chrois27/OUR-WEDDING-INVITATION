@@ -1,0 +1,31 @@
+.greeting {
+    padding: 4rem 2rem;
+    text-align: center;
+    background-color: #f8f8f8;
+  }
+  
+  .content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .message {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .coupleNames {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .details {
+    font-size: 1.1rem;
+  }
+  
+  .date, .location {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
