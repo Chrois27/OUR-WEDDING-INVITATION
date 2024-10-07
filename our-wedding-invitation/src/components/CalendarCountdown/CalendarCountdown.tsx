@@ -4,6 +4,8 @@ import styles from './CalendarCountdown.module.scss';
 
 interface CalendarCountdownProps {
   weddingDate: string; // Format: 'YYYY-MM-DD'
+  dDayText: string;
+  dPlusDayText: string;
 }
 
 const getCalendarDataset = (date: dayjs.Dayjs) => {
@@ -23,36 +25,47 @@ const getCalendarDataset = (date: dayjs.Dayjs) => {
   return calendar;
 };
 
-const CalendarCountdown: React.FC<CalendarCountdownProps> = ({ weddingDate }) => {
-  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+const CalendarCountdown: React.FC<CalendarCountdownProps> = ({ weddingDate, dDayText, dPlusDayText }) => {
   const weddingDay = dayjs(weddingDate);
+
+  const calculateTimeLeft = () => {
+    const now = dayjs();
+    const difference = weddingDay.diff(now);
+    const isPast = difference <= 0;
+    if (isPast) {
+      const pastDifference = now.diff(weddingDay);
+      const days = Math.floor(pastDifference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((pastDifference / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((pastDifference / 1000 / 60) % 60);
+      const seconds = Math.floor((pastDifference / 1000) % 60);
+      return { days, hours, minutes, seconds, isPast };
+    } else {
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((difference / 1000 / 60) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+      return { days, hours, minutes, seconds, isPast };
+    }
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const calendar = getCalendarDataset(weddingDay);
   const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      const now = dayjs();
-      const diff = weddingDay.diff(now, 'second');
-
-      if (diff > 0) {
-        setCountdown({
-          days: Math.floor(diff / (3600 * 24)),
-          hours: Math.floor((diff % (3600 * 24)) / 3600),
-          minutes: Math.floor((diff % 3600) / 60),
-          seconds: diff % 60,
-        });
-      } else {
-        clearInterval(timer);
-      }
+      setTimeLeft(calculateTimeLeft());
     }, 1000);
-
     return () => clearInterval(timer);
   }, [weddingDate]);
 
+  const { days, hours, minutes, seconds, isPast } = timeLeft;
+
   return (
     <div className={styles.calendarCountdown}>
+      <h2>예식 일시</h2>
       <div className={styles.calendar}>
-        <h2>{weddingDay.format('YYYY년 M월')}</h2>
+        <h3>{weddingDay.format('YYYY년 M월')}</h3>
         <table className={styles.calendarTable}>
           <thead>
             <tr>
@@ -83,22 +96,25 @@ const CalendarCountdown: React.FC<CalendarCountdownProps> = ({ weddingDate }) =>
           </tbody>
         </table>
       </div>
-      <div className={styles.countdown}>
-        <div className={styles.countdownItem}>
-          <span className={styles.number}>{countdown.days}</span>
-          <span className={styles.label}>Days</span>
-        </div>
-        <div className={styles.countdownItem}>
-          <span className={styles.number}>{countdown.hours}</span>
-          <span className={styles.label}>Hours</span>
-        </div>
-        <div className={styles.countdownItem}>
-          <span className={styles.number}>{countdown.minutes}</span>
-          <span className={styles.label}>Minutes</span>
-        </div>
-        <div className={styles.countdownItem}>
-          <span className={styles.number}>{countdown.seconds}</span>
-          <span className={styles.label}>Seconds</span>
+      <div className={styles.ddayCounter}>
+        <h3>{isPast ? dPlusDayText : dDayText}</h3>
+        <div className={styles.timeDisplay}>
+          <div className={styles.timeUnit}>
+            <span className={styles.number}>{days}</span>
+            <span className={styles.label}>일</span>
+          </div>
+          <div className={styles.timeUnit}>
+            <span className={styles.number}>{hours}</span>
+            <span className={styles.label}>시간</span>
+          </div>
+          <div className={styles.timeUnit}>
+            <span className={styles.number}>{minutes}</span>
+            <span className={styles.label}>분</span>
+          </div>
+          <div className={styles.timeUnit}>
+            <span className={styles.number}>{seconds}</span>
+            <span className={styles.label}>초</span>
+          </div>
         </div>
       </div>
     </div>

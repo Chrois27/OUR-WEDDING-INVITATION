@@ -64,3 +64,34 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+html, body {
+  touch-action: pan-x pan-y;
+  /* overflow: hidden; 이 줄을 제거하거나 주석 처리합니다 */
+}
+
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* 추가: 스크롤바 스타일링 (선택사항) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

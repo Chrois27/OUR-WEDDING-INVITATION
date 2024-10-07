@@ -9,7 +9,8 @@
   margin-bottom: 2rem;
   text-align: center;
 
-  h2 {
+  h3 {
+    font-size: 1.1rem;
     margin-bottom: 1rem;
   }
 }
@@ -35,33 +36,45 @@
   }
 
   &.sunday {
-    color: red;
+    color: rgba(255, 0, 0, 0.553);
   }
 
   &.saturday {
-    color: blue;
+    color: rgba(0, 0, 255, 0.595);
   }
 
   &.weddingDay {
-    background-color: #ffeb3b;
+    background-color: #f5a3d58d;
     font-weight: bold;
     border-radius: 50%;
   }
 }
 
-.countdown {
-  display: flex;
-  justify-content: space-between;
+.ddayCounter {
+  text-align: center;
+  margin-top: 2rem;
+
+  h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0rem;
+  }
 }
 
-.countdownItem {
-  text-align: center;
+.timeDisplay {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.timeUnit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .number {
   font-size: 2rem;
   font-weight: bold;
-  display: block;
 }
 
 .label {

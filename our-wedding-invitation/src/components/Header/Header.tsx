@@ -9,12 +9,27 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ backgroundImage, title, subtitle }) => {
   return (
-    <header className={styles.header} style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <div className={styles.overlay}>
-        <h1 className={styles.title}>{title}</h1>
-        <h2 className={styles.subtitle}>{subtitle}</h2>
+    <div className={styles.cover}>
+      <div className={styles.backgroundImage} style={{ backgroundImage: `url(${backgroundImage})` }}></div>
+      <div className={styles.content}>
+        <h1>
+        개미는 <br/>
+        오늘도 <br/>
+        열심히 <br/>
+        일을하네 <br/>
+        개미는 <br/>
+        언제나 <br/>
+        열심히 <br/>
+        일을하네 <br/>
+        </h1>
+        <p>- 최성국 &lt; 현재상태 &gt; 中 - </p>
       </div>
-    </header>
+      <div className={styles.guide}>
+        <h2>{title}</h2>
+        <p>{subtitle}</p>
+        <p>서울 신도림 웨딩시티 11층 그랜드볼룸</p>
+      </div>
+    </div>
   );
 };
 

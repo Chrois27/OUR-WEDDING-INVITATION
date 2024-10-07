@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 
 const App: React.FC = () => {
+  useEffect(() => {
+    const preventDefault = (e: Event) => {
+      if (e.type === 'wheel' && !(e as WheelEvent).ctrlKey) {
+        return; // 일반 스크롤은 허용
+      }
+      e.preventDefault();
+    };
+
+    document.addEventListener('gesturestart', preventDefault, { passive: false });
+    document.addEventListener('gesturechange', preventDefault, { passive: false });
+    document.addEventListener('gestureend', preventDefault, { passive: false });
+    document.addEventListener('wheel', preventDefault, { passive: false });
+
+    return () => {
+      document.removeEventListener('gesturestart', preventDefault);
+      document.removeEventListener('gesturechange', preventDefault);
+      document.removeEventListener('gestureend', preventDefault);
+      document.removeEventListener('wheel', preventDefault);
+    };
+  }, []);
+
   return (
     <Router>
       <div className="App">
@@ -15,15 +36,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-// import React from 'react';
-
-// const App: React.FC = () => {
-//   return (
-//     <div className="App">
-//       <h1>Hello, Wedding Invitation!</h1>
-//     </div>
-//   );
-// };
-
-// export default App;

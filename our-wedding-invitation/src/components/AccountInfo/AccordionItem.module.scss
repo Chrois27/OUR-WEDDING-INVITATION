@@ -1,0 +1,29 @@
+.accordionItem {
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .accordionToggle {
+    width: 100%;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .arrow {
+    transition: transform 0.3s ease;
+  
+    &.open {
+      transform: rotate(180deg);
+    }
+  }
+  
+  .accordionContent {
+    padding: 1rem;
+  }

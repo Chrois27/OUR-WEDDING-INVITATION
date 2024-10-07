@@ -5,10 +5,10 @@ import styles from './KakaoMap.module.scss';
 interface KakaoMapProps {
   latitude: number;
   longitude: number;
-  address: string;
+  mapId: string;
 }
 
-const KakaoMap: React.FC<KakaoMapProps> = ({ latitude, longitude, address }) => {
+const KakaoMap: React.FC<KakaoMapProps> = ({ latitude, longitude, mapId }) => {
   useEffect(() => {
     const script = document.createElement('script');
     script.async = true;
@@ -27,13 +27,10 @@ const KakaoMap: React.FC<KakaoMapProps> = ({ latitude, longitude, address }) => 
       <Map
         center={{ lat: latitude, lng: longitude }}
         style={{ width: '100%', height: '400px' }}
+        id={mapId}
       >
         <MapMarker position={{ lat: latitude, lng: longitude }} />
       </Map>
-      <div className={styles.address}>
-        <h3>오시는 길</h3>
-        <p>{address}</p>
-      </div>
     </div>
   );
 };

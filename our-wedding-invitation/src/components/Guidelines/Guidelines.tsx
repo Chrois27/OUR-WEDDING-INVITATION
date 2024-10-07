@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Guidelines.module.scss';
 
 interface GuidelinesProps {
-  items: string[];
+  items: React.ReactNode[];
 }
 
 const Guidelines: React.FC<GuidelinesProps> = ({ items }) => {
