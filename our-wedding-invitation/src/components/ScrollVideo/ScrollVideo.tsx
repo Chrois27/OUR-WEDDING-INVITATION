@@ -32,8 +32,6 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
   }, [videoSrc]);
 
   useEffect(() => {
-    if (!isLoaded) return;
-
     const video = videoRef.current;
     const container = containerRef.current;
     if (!video || !container) return;
@@ -88,15 +86,15 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
           bottom: isFixed ? 'auto' : '0'
         }}
       >
-        {isLoaded && (
-          <video
-            ref={videoRef}
-            className={styles.scrollVideo}
-            src={videoSrc}
-            muted
-            playsInline
-          />
-        )}
+        <video
+          ref={videoRef}
+          className={styles.scrollVideo}
+          src={videoSrc}
+          muted
+          playsInline
+          style={{ display: isLoaded ? 'block' : 'none' }}
+        />
+        {!isLoaded && <div className={styles.loadingPlaceholder}>Loading...</div>}
         <div 
           className={styles.fadeOverlay}
           style={{ opacity: 1 - fadeInOutOpacity }}

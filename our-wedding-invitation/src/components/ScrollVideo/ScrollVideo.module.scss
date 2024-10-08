@@ -32,3 +32,13 @@
     background-color: black; // 페이드 인/아웃 색상
     pointer-events: none; // 오버레이가 마우스 이벤트를 방해하지 않도록 함
   }
+
+
+.loadingPlaceholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: #ffffff;
+}
