@@ -24,43 +24,61 @@ const RSVPModal: React.FC<RSVPModalProps> = ({
   const [attendance, setAttendance] = useState<'yes' | 'no' | ''>('');
   const [numberOfGuests, setNumberOfGuests] = useState(1);
   const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState<{name?: string; attendance?: string}>({});
 
   if (!isOpen) return null;
 
+  const validateForm = () => {
+    const newErrors: {name?: string; attendance?: string} = {};
+    if (!name.trim()) {
+      newErrors.name = '이름을 입력해주세요.';
+    }
+    if (!attendance) {
+      newErrors.attendance = '참석 여부를 선택해주세요.';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send this data to your server
-    console.log({ name, attendance, numberOfGuests, message });
-    alert('참석 여부가 전달되었습니다. 감사합니다!');
-    onClose();
+    if (validateForm()) {
+      // Here you would typically send this data to your server
+      console.log({ name, attendance, numberOfGuests, message });
+      alert('참석 여부가 전달되었습니다. 감사합니다!');
+      onClose();
+    }
   };
 
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        <h2>참석 여부 전달</h2>
+        <h2>참석 여부 전달(RSVP)</h2>
         <p>
-          소중한 시간을 내어 결혼식에 참석해주시는 모든 분들께 감사드립니다.<br/>
-          신랑신부에게 참석 여부를 알려주시면 더욱 성심껏 준비하는 데 도움이 될 것 같습니다.
+          소중한 시간을 내어 결혼식에 참석해주시는 모든 분들께<br/>
+          진심으로 감사드립니다.<br/>
+          신랑신부에게 참석 여부를 알려주시면<br/>
+          더욱 성심껏 준비하는 데 도움이 될 것 같습니다.
         </p>
-        <p>
+        <h4>
           신랑 {groomName}, 신부 {brideName}<br />
           {weddingDate} {weddingTime}<br />
           {weddingLocation}
-        </p>
+        </h4>
+        <p>🌸</p>
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label htmlFor="name">이름</label>
+            <label htmlFor="name"><h3>이름</h3></label>
             <input
               type="text"
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
             />
+            {errors.name && <span className={styles.error}>{errors.name}</span>}
           </div>
           <div className={styles.formGroup}>
-            <label>참석 여부</label>
+            <h3>참석 여부</h3>
             <div className={styles.radioGroup}>
               <label>
                 <input
@@ -68,7 +86,6 @@ const RSVPModal: React.FC<RSVPModalProps> = ({
                   value="yes"
                   checked={attendance === 'yes'}
                   onChange={() => setAttendance('yes')}
-                  required
                 />
                 참석
               </label>
@@ -82,6 +99,7 @@ const RSVPModal: React.FC<RSVPModalProps> = ({
                 불참
               </label>
             </div>
+            {errors.attendance && <span className={styles.error}>{errors.attendance}</span>}
           </div>
           {attendance === 'yes' && (
             <div className={styles.formGroup}>
@@ -96,7 +114,7 @@ const RSVPModal: React.FC<RSVPModalProps> = ({
             </div>
           )}
           <div className={styles.formGroup}>
-            <label htmlFor="message">메시지 (선택사항)</label>
+            <label htmlFor="message"><h3>신랑, 신부에게 보낼 메시지 (선택사항)</h3></label>
             <textarea
               id="message"
               value={message}

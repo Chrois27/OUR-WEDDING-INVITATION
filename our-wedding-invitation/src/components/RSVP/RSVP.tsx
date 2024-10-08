@@ -25,7 +25,7 @@ const RSVP: React.FC<RSVPProps> = ({
   return (
     <div className={styles.rsvp}>
       <button onClick={openModal} className={styles.rsvpButton}>
-        참석 여부 전달
+        참석 여부 전달(RSVP)
       </button>
       <RSVPModal
         isOpen={isModalOpen}
