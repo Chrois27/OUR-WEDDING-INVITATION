@@ -10,8 +10,30 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFixed, setIsFixed] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // 비디오 프리로딩
+    video.preload = "auto";
+    video.load();
+
+    const handleCanPlayThrough = () => {
+      setIsLoaded(true);
+    };
+
+    video.addEventListener('canplaythrough', handleCanPlayThrough);
+
+    return () => {
+      video.removeEventListener('canplaythrough', handleCanPlayThrough);
+    };
+  }, [videoSrc]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
     const video = videoRef.current;
     const container = containerRef.current;
     if (!video || !container) return;
@@ -27,20 +49,16 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
         const containerTop = rect.top;
         const containerHeight = rect.height;
 
-        // 고정 시작 지점 (화면의 1/3 지점)
         const fixPoint = windowHeight / 3;
 
-        // 고정 여부 결정
         setIsFixed(containerTop <= fixPoint && containerTop > -containerHeight + windowHeight);
 
-        // 진행도 계산
         const totalScrollDistance = containerHeight - windowHeight + fixPoint;
         const scrolled = fixPoint - containerTop;
         const newProgress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
         
         setProgress(newProgress);
 
-        // 비디오 시간 업데이트
         if (video.duration) {
           video.currentTime = newProgress * video.duration;
         }
@@ -50,19 +68,14 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    video.addEventListener('loadedmetadata', handleScroll);
-
-    // 초기 상태 설정
     handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      video.removeEventListener('loadedmetadata', handleScroll);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [isLoaded]);
 
-  // 페이드 인/아웃을 위한 오버레이 불투명도 계산
   const fadeInOutOpacity = Math.min(1, Math.min(progress, 1 - progress) * 5);
 
   return (
@@ -75,13 +88,15 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
           bottom: isFixed ? 'auto' : '0'
         }}
       >
-        <video
-          ref={videoRef}
-          className={styles.scrollVideo}
-          src={videoSrc}
-          muted
-          playsInline
-        />
+        {isLoaded && (
+          <video
+            ref={videoRef}
+            className={styles.scrollVideo}
+            src={videoSrc}
+            muted
+            playsInline
+          />
+        )}
         <div 
           className={styles.fadeOverlay}
           style={{ opacity: 1 - fadeInOutOpacity }}
