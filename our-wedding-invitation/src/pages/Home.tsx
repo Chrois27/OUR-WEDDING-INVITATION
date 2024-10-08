@@ -7,6 +7,7 @@ import Directions from '../components/Directions/Directions';
 import Gallery from '../components/Gallery/Gallery';
 import AccountInfo from '../components/AccountInfo/AccountInfo';
 import Guidelines from '../components/Guidelines/Guidelines';
+import RSVP from '../components/RSVP/RSVP';
 import Footer from '../components/Footer/Footer';
 import ScrollAnimation from './ScrollAnimation';
 import styles from './Home.module.scss';
@@ -103,6 +104,15 @@ const Home: React.FC = () => {
       </ScrollAnimation>
       <ScrollAnimation>
         <Guidelines items={guidelineItems} />
+      </ScrollAnimation>
+      <ScrollAnimation>
+        <RSVP
+          groomName="최성국"
+          brideName="김보라"
+          weddingDate="2025년 2월 8일 토요일"
+          weddingTime="저녁 5시 40분"
+          weddingLocation="신도림 테크노마트 11층 웨딩시티 그랜드볼룸홀"
+        />
       </ScrollAnimation>
       <Footer
         shareUrl="https://your-wedding-invitation-url.com"
