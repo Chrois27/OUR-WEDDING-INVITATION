@@ -55,6 +55,7 @@ const Home: React.FC = () => {
         subtitle="2025년 2월 8일 토요일 저녁 5시 40분"
       />
       <ScrollVideo videoSrc="/videos/ourStory.mp4" />
+      <div className={styles.contentWrapper}>
       <ScrollAnimation>
         <Greeting
           relationshipStartDate="2018-03-11" // 관계 시작 날짜
@@ -104,6 +105,7 @@ const Home: React.FC = () => {
       <ScrollAnimation>
         <Guidelines items={guidelineItems} />
       </ScrollAnimation>
+      </div>
       <Footer
         shareUrl="https://your-wedding-invitation-url.com"
         paperInvitationUrl="/path/to/paper-invitation.pdf"

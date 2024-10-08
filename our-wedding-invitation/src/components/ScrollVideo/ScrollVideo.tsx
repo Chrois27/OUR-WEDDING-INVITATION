@@ -11,70 +11,89 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
   const [isFixed, setIsFixed] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // 비디오 프리로딩
     video.preload = "auto";
     video.load();
 
-    const handleCanPlayThrough = () => {
+    const handleLoaded = () => {
       setIsLoaded(true);
+      setDimensions({ width: video.videoWidth, height: video.videoHeight });
     };
 
-    video.addEventListener('canplaythrough', handleCanPlayThrough);
+    video.addEventListener('loadedmetadata', handleLoaded);
 
     return () => {
-      video.removeEventListener('canplaythrough', handleCanPlayThrough);
+      video.removeEventListener('loadedmetadata', handleLoaded);
     };
   }, [videoSrc]);
 
   useEffect(() => {
-    const video = videoRef.current;
-    const container = containerRef.current;
-    if (!video || !container) return;
-
-    let rafId: number | null = null;
-
     const handleScroll = () => {
-      if (rafId) return;
+      const container = containerRef.current;
+      const video = videoRef.current;
+      if (!container || !video) return;
 
-      rafId = requestAnimationFrame(() => {
-        const rect = container.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        const containerTop = rect.top;
-        const containerHeight = rect.height;
+      const rect = container.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const containerTop = rect.top;
+      const containerHeight = rect.height;
 
-        const fixPoint = windowHeight / 3;
+      const fixPoint = windowHeight / 3;
 
-        setIsFixed(containerTop <= fixPoint && containerTop > -containerHeight + windowHeight);
+      setIsFixed(containerTop <= fixPoint && containerTop > -containerHeight + windowHeight);
 
-        const totalScrollDistance = containerHeight - windowHeight + fixPoint;
-        const scrolled = fixPoint - containerTop;
-        const newProgress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
-        
-        setProgress(newProgress);
+      const totalScrollDistance = containerHeight - windowHeight + fixPoint;
+      const scrolled = fixPoint - containerTop;
+      const newProgress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
+      
+      setProgress(newProgress);
 
-        if (video.duration) {
-          video.currentTime = newProgress * video.duration;
-        }
-
-        rafId = null;
-      });
+      if (video.duration) {
+        video.currentTime = newProgress * video.duration;
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll();
+    handleScroll(); // 초기 상태 설정
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
     };
   }, [isLoaded]);
 
   const fadeInOutOpacity = Math.min(1, Math.min(progress, 1 - progress) * 5);
+
+  const calculateVideoStyle = () => {
+    if (dimensions.width === 0 || dimensions.height === 0) return {};
+
+    const videoRatio = dimensions.width / dimensions.height;
+    const windowRatio = window.innerWidth / window.innerHeight;
+
+    let width, height;
+
+    if (videoRatio > windowRatio) {
+      // 영상이 화면보다 가로로 더 긴 경우
+      width = '100%';
+      height = 'auto';
+    } else {
+      // 영상이 화면보다 세로로 더 긴 경우
+      width = 'auto';
+      height = '100%';
+    }
+
+    return { 
+      width, 
+      height,
+      maxWidth: '100%',
+      maxHeight: '100%',
+      objectFit: 'contain' as const
+    };
+  };
 
   return (
     <div ref={containerRef} className={styles.scrollVideoContainer}>
@@ -92,7 +111,10 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
           src={videoSrc}
           muted
           playsInline
-          style={{ display: isLoaded ? 'block' : 'none' }}
+          style={{
+            ...calculateVideoStyle(),
+            display: isLoaded ? 'block' : 'none'
+          }}
         />
         {!isLoaded && <div className={styles.loadingPlaceholder}>Loading...</div>}
         <div 

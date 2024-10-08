@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Footer.module.scss';
+import useKakaoSDK from '../../utils/hooks/useKakaoSDK';
 
 interface FooterProps {
   shareUrl: string;
@@ -7,6 +8,8 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ shareUrl, paperInvitationUrl }) => {
+  const kakaoSDK = useKakaoSDK();
+
   const shareInvitation = () => {
     if (navigator.share) {
       navigator.share({
@@ -19,10 +22,41 @@ const Footer: React.FC<FooterProps> = ({ shareUrl, paperInvitationUrl }) => {
     }
   };
 
+  const handleKakaoShare = () => {
+    if (kakaoSDK) {
+      kakaoSDK.Link.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: '우리의 결혼식에 초대합니다',
+          description: '모바일 청첩장입니다. 참석해 주시면 감사하겠습니다.',
+          imageUrl: 'https://example.com/wedding-image.jpg', // 실제 이미지 URL로 교체해주세요
+          link: {
+            mobileWebUrl: shareUrl,
+            webUrl: shareUrl,
+          },
+        },
+        buttons: [
+          {
+            title: '청첩장 보기',
+            link: {
+              mobileWebUrl: shareUrl,
+              webUrl: shareUrl,
+            },
+          },
+        ],
+      });
+    } else {
+      alert('카카오톡 공유하기를 사용할 수 없습니다.');
+    }
+  };
+
   return (
     <footer className={styles.footer}>
       <button onClick={shareInvitation} className={styles.shareButton}>
         청첩장 공유하기
+      </button>
+      <button onClick={handleKakaoShare} className={styles.kakaoShareButton}>
+        카카오톡으로 공유하기
       </button>
       <a href={paperInvitationUrl} className={styles.paperInvitationLink}>
         종이 청첩장 보기

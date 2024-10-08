@@ -1,38 +1,40 @@
 .scrollVideoContainer {
-    width: 100%;
-    height: 1200vh; // 컨테이너 높이를 2배의 viewport 높이로 설정
-    position: relative;
-  }
-  
-  .scrollVideoWrapper {
-    width: 100%;
-    height: 100vh;
-    left: 0;
-    right: 0;
-    overflow: hidden; // 추가: 오버레이가 비디오 영역을 벗어나지 않도록 함
-  
-    &.fixed {
-      position: fixed;
-      top: 0;
-    }
-  }
-  
-  .scrollVideo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .fadeOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: black; // 페이드 인/아웃 색상
-    pointer-events: none; // 오버레이가 마우스 이벤트를 방해하지 않도록 함
-  }
+  width: 100%;
+  height: 1200vh; // 스크롤 효과를 위한 높이
+  position: relative;
+}
 
+.scrollVideoWrapper {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  &.fixed {
+    position: fixed;
+  }
+}
+
+.scrollVideo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.fadeOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  pointer-events: none;
+}
 
 .loadingPlaceholder {
   position: absolute;
