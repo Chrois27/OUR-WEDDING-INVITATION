@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import styles from './ScrollVideo.module.scss';
 
 interface ScrollVideoProps {
@@ -13,62 +13,73 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
+  const handleLoaded = useCallback(() => {
+    const video = videoRef.current;
+    if (video) {
+      setIsLoaded(true);
+      setDimensions({ width: video.videoWidth, height: video.videoHeight });
+    }
+  }, []);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    video.preload = "auto";
+    video.preload = "metadata";
     video.load();
-
-    const handleLoaded = () => {
-      setIsLoaded(true);
-      setDimensions({ width: video.videoWidth, height: video.videoHeight });
-    };
 
     video.addEventListener('loadedmetadata', handleLoaded);
 
     return () => {
       video.removeEventListener('loadedmetadata', handleLoaded);
     };
-  }, [videoSrc]);
+  }, [videoSrc, handleLoaded]);
+
+  const handleScroll = useCallback(() => {
+    const container = containerRef.current;
+    const video = videoRef.current;
+    if (!container || !video) return;
+
+    const rect = container.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const containerTop = rect.top;
+    const containerHeight = rect.height;
+
+    const fixPoint = windowHeight / 3;
+
+    setIsFixed(containerTop <= fixPoint && containerTop > -containerHeight + windowHeight);
+
+    const totalScrollDistance = containerHeight - windowHeight + fixPoint;
+    const scrolled = fixPoint - containerTop;
+    const newProgress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
+    
+    setProgress(newProgress);
+
+    if (video.duration) {
+      video.currentTime = newProgress * video.duration;
+    }
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const container = containerRef.current;
-      const video = videoRef.current;
-      if (!container || !video) return;
-
-      const rect = container.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const containerTop = rect.top;
-      const containerHeight = rect.height;
-
-      const fixPoint = windowHeight / 3;
-
-      setIsFixed(containerTop <= fixPoint && containerTop > -containerHeight + windowHeight);
-
-      const totalScrollDistance = containerHeight - windowHeight + fixPoint;
-      const scrolled = fixPoint - containerTop;
-      const newProgress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
-      
-      setProgress(newProgress);
-
-      if (video.duration) {
-        video.currentTime = newProgress * video.duration;
+    const throttledHandleScroll = () => {
+      if (!window.requestAnimationFrame) {
+        setTimeout(handleScroll, 66);
+      } else {
+        requestAnimationFrame(handleScroll);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // 초기 상태 설정
+    window.addEventListener('scroll', throttledHandleScroll);
+    throttledHandleScroll(); // 초기 상태 설정
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', throttledHandleScroll);
     };
-  }, [isLoaded]);
+  }, [handleScroll]);
 
   const fadeInOutOpacity = Math.min(1, Math.min(progress, 1 - progress) * 5);
 
-  const calculateVideoStyle = () => {
+  const calculateVideoStyle = useCallback(() => {
     if (dimensions.width === 0 || dimensions.height === 0) return {};
 
     const videoRatio = dimensions.width / dimensions.height;
@@ -77,11 +88,9 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     let width, height;
 
     if (videoRatio > windowRatio) {
-      // 영상이 화면보다 가로로 더 긴 경우
       width = '100%';
       height = 'auto';
     } else {
-      // 영상이 화면보다 세로로 더 긴 경우
       width = 'auto';
       height = '100%';
     }
@@ -93,7 +102,7 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
       maxHeight: '100%',
       objectFit: 'contain' as const
     };
-  };
+  }, [dimensions]);
 
   return (
     <div ref={containerRef} className={styles.scrollVideoContainer}>
@@ -126,4 +135,4 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
   );
 };
 
-export default ScrollVideo;
+export default React.memo(ScrollVideo);

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const KAKAO_SDK_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_API_KEY}&autoload=false`;
+const KAKAO_SDK_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_APP_KEY}&autoload=false`;
 
 declare global {
   interface Window {
