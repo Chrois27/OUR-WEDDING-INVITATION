@@ -8,7 +8,7 @@ const Directions: React.FC = () => {
 
   return (
     <div className={styles.directions}>
-        <h2>오시는 길</h2>
+      <h2>오시는 길</h2>
       <KakaoMap latitude={latitude} longitude={longitude} mapId="wedding-map" />
       <p className={styles.mapLink}>
         그림으로 된 약도가 필요하면 <a href="/images/map.pdf" target="_blank" rel="noopener noreferrer">여기</a>를 눌러주세요

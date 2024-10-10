@@ -5,11 +5,11 @@ import styles from './KakaoMap.module.scss';
 interface KakaoMapProps {
   latitude: number;
   longitude: number;
+  mapId?: string;
 }
 
-const KakaoMap: React.FC<KakaoMapProps> = ({ latitude, longitude }) => {
+const KakaoMap: React.FC<KakaoMapProps> = ({ latitude, longitude, mapId = 'map' }) => {
   const kakaoMaps = useKakaoMapSDK();
-  const [mapInstance, setMapInstance] = useState<kakao.maps.Map | null>(null);
   const [error, setError] = useState<string | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
@@ -23,7 +23,6 @@ const KakaoMap: React.FC<KakaoMapProps> = ({ latitude, longitude }) => {
       };
 
       const map = new kakaoMaps.maps.Map(mapContainerRef.current, mapOptions);
-      setMapInstance(map);
 
       // 지도 컨트롤 추가
       const zoomControl = new kakaoMaps.maps.ZoomControl();
@@ -87,7 +86,7 @@ const KakaoMap: React.FC<KakaoMapProps> = ({ latitude, longitude }) => {
       {!kakaoMaps ? (
         <div className={styles.mapLoading}>지도를 불러오는 중...</div>
       ) : (
-        <div ref={mapContainerRef} className={styles.map} />
+        <div ref={mapContainerRef} id={mapId} className={styles.map} />
       )}
     </div>
   );
