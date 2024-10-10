@@ -14,39 +14,42 @@ const App: React.FC = () => {
     };
 
     const setViewportHeight = () => {
-      const vh = window.innerHeight * 0.01;
+      const vh = window.innerHeight;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
-      setWindowHeight(window.innerHeight);
+      setWindowHeight(vh);
     };
 
-    const handleScroll = () => {
-      if (window.innerHeight !== windowHeight) {
-        setViewportHeight();
-      }
+    const handleResize = () => {
+      // 리사이즈 이벤트를 더 자주 체크합니다
+      requestAnimationFrame(setViewportHeight);
     };
 
     setViewportHeight();
 
-    window.addEventListener('resize', setViewportHeight);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
     document.addEventListener('gesturestart', preventDefault, { passive: false });
     document.addEventListener('gesturechange', preventDefault, { passive: false });
     document.addEventListener('gestureend', preventDefault, { passive: false });
     document.addEventListener('wheel', preventDefault, { passive: false });
 
+    // 주소 표시줄 높이 변화 감지를 위한 추가적인 이벤트 리스너
+    window.addEventListener('scroll', handleResize);
+
     return () => {
-      window.removeEventListener('resize', setViewportHeight);
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+      window.removeEventListener('scroll', handleResize);
       document.removeEventListener('gesturestart', preventDefault);
       document.removeEventListener('gesturechange', preventDefault);
       document.removeEventListener('gestureend', preventDefault);
       document.removeEventListener('wheel', preventDefault);
     };
-  }, [windowHeight]);
+  }, []);
 
   return (
     <Router>
-      <div className="App" style={{ minHeight: `${windowHeight}px` }}>
+      <div className="App" style={{ height: `${windowHeight}px` }}>
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>
