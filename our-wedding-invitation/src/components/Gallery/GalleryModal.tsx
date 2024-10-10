@@ -21,29 +21,45 @@ const GalleryModal: React.FC<GalleryModalProps> = ({ images, initialIndex, onClo
       setShowGuide(false);
     }, 3000);
 
-    return () => clearTimeout(timer);
+    // Disable scrolling on body
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      clearTimeout(timer);
+      // Re-enable scrolling on body when component unmounts
+      document.body.style.overflow = 'auto';
+    };
   }, []);
 
-  const handlePrev = () => {
+  const handlePrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setCurrentIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : images.length - 1));
   };
 
-  const handleNext = () => {
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setCurrentIndex((prevIndex) => (prevIndex < images.length - 1 ? prevIndex + 1 : 0));
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'ArrowLeft') {
-      handlePrev();
+      handlePrev(event as unknown as React.MouseEvent);
     } else if (event.key === 'ArrowRight') {
-      handleNext();
+      handleNext(event as unknown as React.MouseEvent);
     } else if (event.key === 'Escape') {
       onClose();
     }
   };
 
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
-    <div className={styles.modal} onClick={onClose} onKeyDown={handleKeyDown} tabIndex={0}>
+    <div className={styles.modal} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <img src={images[currentIndex].src} alt={images[currentIndex].alt} className={styles.modalImage} />
         <button className={styles.prevButton} onClick={handlePrev}>&lt;</button>

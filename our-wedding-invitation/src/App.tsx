@@ -11,6 +11,14 @@ const App: React.FC = () => {
       e.preventDefault();
     };
 
+    const setVH = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setVH(); // 초기 설정
+    window.addEventListener('resize', setVH);
+
     document.addEventListener('gesturestart', preventDefault, { passive: false });
     document.addEventListener('gesturechange', preventDefault, { passive: false });
     document.addEventListener('gestureend', preventDefault, { passive: false });
@@ -21,6 +29,7 @@ const App: React.FC = () => {
       document.removeEventListener('gesturechange', preventDefault);
       document.removeEventListener('gestureend', preventDefault);
       document.removeEventListener('wheel', preventDefault);
+      window.removeEventListener('resize', setVH);
     };
   }, []);
 

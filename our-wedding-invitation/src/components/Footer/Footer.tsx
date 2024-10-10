@@ -13,8 +13,8 @@ const Footer: React.FC<FooterProps> = ({ shareUrl, paperInvitationUrl }) => {
   const shareInvitation = () => {
     if (navigator.share) {
       navigator.share({
-        title: '우리의 결혼식에 초대합니다',
-        text: '모바일 청첩장입니다. 참석해 주시면 감사하겠습니다.',
+        title: '예비신랑 최성국 💖 예비신부 김보라',
+        text: '2025년 2월 8일, 우리의 특별한 날에 여러분을 초대합니다.',
         url: shareUrl,
       });
     } else {
@@ -27,9 +27,9 @@ const Footer: React.FC<FooterProps> = ({ shareUrl, paperInvitationUrl }) => {
       kakaoSDK.Link.sendDefault({
         objectType: 'feed',
         content: {
-          title: '우리의 결혼식에 초대합니다',
-          description: '모바일 청첩장입니다. 참석해 주시면 감사하겠습니다.',
-          imageUrl: 'https://example.com/wedding-image.jpg', // 실제 이미지 URL로 교체해주세요
+          title: '예비신랑 최성국 💖 예비신부 김보라',
+          description: '2025년 2월 8일, 우리의 특별한 날에 여러분을 초대합니다.',
+          imageUrl: '%PUBLIC_URL%/MainIMG,png',
           link: {
             mobileWebUrl: shareUrl,
             webUrl: shareUrl,

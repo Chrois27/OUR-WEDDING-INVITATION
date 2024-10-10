@@ -47,11 +47,12 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
 
     const fixPoint = windowHeight / 3;
 
-    setIsFixed(containerTop <= fixPoint && containerTop > -containerHeight + windowHeight);
+    const isVideoFixed = containerTop <= fixPoint && containerTop > -containerHeight + windowHeight;
+    setIsFixed(isVideoFixed);
 
     const totalScrollDistance = containerHeight - windowHeight + fixPoint;
-    const scrolled = fixPoint - containerTop;
-    const newProgress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
+    const scrolled = Math.max(0, fixPoint - containerTop);
+    const newProgress = Math.min(1, scrolled / totalScrollDistance);
     
     setProgress(newProgress);
 
@@ -62,11 +63,7 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
 
   useEffect(() => {
     const throttledHandleScroll = () => {
-      if (!window.requestAnimationFrame) {
-        setTimeout(handleScroll, 66);
-      } else {
-        requestAnimationFrame(handleScroll);
-      }
+      requestAnimationFrame(handleScroll);
     };
 
     window.addEventListener('scroll', throttledHandleScroll);
@@ -111,7 +108,9 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
         style={{ 
           position: isFixed ? 'fixed' : 'absolute',
           top: isFixed ? '0' : 'auto',
-          bottom: isFixed ? 'auto' : '0'
+          bottom: isFixed ? 'auto' : '0',
+          left: '0',
+          right: '0'
         }}
       >
         <video
