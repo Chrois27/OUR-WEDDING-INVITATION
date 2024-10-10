@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import styles from './GalleryModal.module.scss';
 
 interface Image {
@@ -21,12 +22,10 @@ const GalleryModal: React.FC<GalleryModalProps> = ({ images, initialIndex, onClo
       setShowGuide(false);
     }, 3000);
 
-    // Disable scrolling on body
     document.body.style.overflow = 'hidden';
 
     return () => {
       clearTimeout(timer);
-      // Re-enable scrolling on body when component unmounts
       document.body.style.overflow = 'auto';
     };
   }, []);
@@ -58,7 +57,7 @@ const GalleryModal: React.FC<GalleryModalProps> = ({ images, initialIndex, onClo
     };
   }, []);
 
-  return (
+  const modalContent = (
     <div className={styles.modal} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <img src={images[currentIndex].src} alt={images[currentIndex].alt} className={styles.modalImage} />
@@ -75,6 +74,11 @@ const GalleryModal: React.FC<GalleryModalProps> = ({ images, initialIndex, onClo
         )}
       </div>
     </div>
+  );
+
+  return ReactDOM.createPortal(
+    modalContent,
+    document.body
   );
 };
 
