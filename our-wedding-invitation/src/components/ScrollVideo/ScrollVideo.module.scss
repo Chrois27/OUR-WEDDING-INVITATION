@@ -6,7 +6,10 @@
 
 .scrollVideoWrapper {
   width: 100%;
-  height: 100vh;
+  height: 100vh; // 이 부분은 JavaScript에서 동적으로 설정됩니다
+  position: absolute;
+  top: 0;
+  left: 0;
   display: flex;
   justify-content: center;
   align-items: center;
