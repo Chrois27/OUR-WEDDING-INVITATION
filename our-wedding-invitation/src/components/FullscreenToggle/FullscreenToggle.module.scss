@@ -1,0 +1,17 @@
+.fullscreenToggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s;
+  
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+  }
