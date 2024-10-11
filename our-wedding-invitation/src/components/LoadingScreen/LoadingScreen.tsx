@@ -28,7 +28,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
 
     const videoPromise = new Promise((resolve, reject) => {
       const video = document.createElement('video');
-      video.src = '/videos/ourStory.mp4';
+      video.src = '/videos/ourStory.mov';
       video.onloadeddata = resolve;
       video.onerror = reject;
     });

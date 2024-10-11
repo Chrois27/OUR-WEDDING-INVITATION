@@ -54,7 +54,7 @@ const Home: React.FC = () => {
         title="신랑 최성국 ❤️ 신부 김보라"
         subtitle="2025년 2월 8일 토요일 저녁 5시 40분"
       />
-      <ScrollVideo videoSrc="/videos/ourStory.mp4" />
+      <ScrollVideo videoSrc="/videos/ourStory.mov" />
       <div className={styles.contentWrapper}>
       <ScrollAnimation>
         <Greeting
