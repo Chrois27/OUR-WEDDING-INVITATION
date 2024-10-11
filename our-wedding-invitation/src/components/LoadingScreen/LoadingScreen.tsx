@@ -38,26 +38,17 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
       .catch(error => console.error('Error loading resources:', error));
   }, []);
 
-  const handleStart = () => {
-    document.documentElement.requestFullscreen()
-      .then(onStart)
-      .catch(err => {
-        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-        onStart(); // 전체 화면 전환에 실패하더라도 시작
-      });
-  };
-
   return (
     <div className={styles.loadingScreen}>
       {isLoading ? (
         <div className={styles.loader}>Loading...</div>
       ) : (
         <div className={styles.startContainer}>
-          <button className={styles.startButton} onClick={handleStart}>
+          <button className={styles.startButton} onClick={onStart}>
             시작하기
           </button>
           <p className={styles.startInfo}>
-            모바일 청첩장을 온전히 즐길 수 있게 전체화면으로 진행합니다.
+            모바일 청첩장을 시작합니다.
           </p>
         </div>
       )}
