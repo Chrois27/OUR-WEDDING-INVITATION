@@ -12,8 +12,28 @@
   }
   
   .loader {
-    font-size: 24px;
+    font-size: 18px;
     color: #333;
+    text-align: center;
+  }
+  
+  .error {
+    text-align: center;
+    color: #d32f2f;
+  
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: #d32f2f;
+      }
+    }
   }
   
   .startContainer {

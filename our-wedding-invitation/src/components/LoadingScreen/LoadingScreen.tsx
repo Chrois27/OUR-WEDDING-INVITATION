@@ -7,9 +7,11 @@ interface LoadingScreenProps {
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const imagePromises = [
+    const imageSources = [
       '/images/MainIMG.png',
       '/images/GalleryIMG1.png',
       '/images/GalleryIMG2.png',
@@ -17,34 +19,92 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
       '/images/GalleryIMG4.png',
       '/images/GalleryIMG5.png',
       '/images/GalleryIMG6.png'
-    ].map(src => {
-      return new Promise((resolve, reject) => {
+    ];
+
+    const videoSource = '/videos/ourStory.mov';
+
+    let loadedCount = 0;
+    const totalCount = imageSources.length + 1; // Images + Video
+
+    const updateProgress = () => {
+      loadedCount++;
+      setProgress((loadedCount / totalCount) * 100);
+    };
+
+    const imagePromises = imageSources.map(src => {
+      return new Promise<void>((resolve, reject) => {
         const img = new Image();
         img.src = src;
-        img.onload = resolve;
-        img.onerror = reject;
+        img.onload = () => {
+          updateProgress();
+          resolve();
+        };
+        img.onerror = () => reject(`Failed to load image: ${src}`);
       });
     });
 
-    const videoPromise = new Promise((resolve, reject) => {
+    const videoPromise = new Promise<void>((resolve, reject) => {
       const video = document.createElement('video');
-      video.src = '/videos/ourStory.mov';
-      video.onloadeddata = resolve;
-      video.onerror = reject;
+      video.preload = 'auto';
+      video.src = videoSource;
+
+      let loaded = false;
+
+      video.onloadeddata = () => {
+        if (!loaded) {
+          loaded = true;
+          updateProgress();
+          resolve();
+        }
+      };
+
+      video.oncanplaythrough = () => {
+        if (!loaded) {
+          loaded = true;
+          updateProgress();
+          resolve();
+        }
+      };
+
+      video.onerror = () => reject(`Failed to load video: ${videoSource}`);
     });
 
-    Promise.all([...imagePromises, videoPromise])
+    const timeoutPromise = new Promise<void>((_, reject) => {
+      setTimeout(() => reject('Loading timed out'), 30000); // 30 seconds timeout
+    });
+
+    Promise.race([
+      Promise.all([...imagePromises, videoPromise]),
+      timeoutPromise
+    ])
       .then(() => setIsLoading(false))
-      .catch(error => console.error('Error loading resources:', error));
+      .catch(error => {
+        console.error('Loading error:', error);
+        setError('리소스 로딩 중 오류가 발생했습니다. 새로고침을 해주세요.');
+        setIsLoading(false);
+      });
   }, []);
+
+  const handleStart = () => {
+    if (!isLoading && !error) {
+      onStart();
+    }
+  };
 
   return (
     <div className={styles.loadingScreen}>
       {isLoading ? (
-        <div className={styles.loader}>Loading...</div>
+        <div className={styles.loader}>
+          <p>Loading... {progress.toFixed(0)}%</p>
+        </div>
+      ) : error ? (
+        <div className={styles.error}>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>새로고침</button>
+        </div>
       ) : (
         <div className={styles.startContainer}>
-          <button className={styles.startButton} onClick={onStart}>
+          <button className={styles.startButton} onClick={handleStart}>
             시작하기
           </button>
           <p className={styles.startInfo}>
