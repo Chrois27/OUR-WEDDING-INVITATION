@@ -6,6 +6,11 @@
   background-color: #ffffff;
   color: #333333;
 
+  .Spacer {
+    height: 20rem; // 여백의 크기를 조절할 수 있습니다.
+    background-color: #ffffff; // 필요하다면 배경색을 설정할 수 있습니다.
+  }
+
   .contentWrapper {
     max-width: 800px; // 큰 화면에서의 최대 너비 설정
     margin: 0 auto; // 중앙 정렬
@@ -13,7 +18,7 @@
   
     // 각 섹션에 대한 스타일
     > * {
-      margin-bottom: 10rem; // 각 섹션 사이의 간격을 4rem으로 설정
+      margin-bottom: 10rem; // 각 섹션 사이의 간격을
       
       &:last-child {
         margin-bottom: 0; // 마지막 섹션의 아래 여백 제거

@@ -55,6 +55,7 @@ const Home: React.FC = () => {
         subtitle="2025년 2월 8일 토요일 저녁 5시 40분"
       />
       <ScrollVideo videoSrc="/videos/ourStory.mov" />
+      <div className={styles.Spacer}></div>
       <div className={styles.contentWrapper}>
       <ScrollAnimation>
         <Greeting
