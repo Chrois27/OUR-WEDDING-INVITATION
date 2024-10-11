@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './LoadingScreen.module.scss';
 
 interface LoadingScreenProps {
@@ -9,6 +9,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const imageSources = [
@@ -31,68 +32,78 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
       setProgress((loadedCount / totalCount) * 100);
     };
 
-    const imagePromises = imageSources.map(src => {
-      return new Promise<void>((resolve, reject) => {
+    const loadImage = (src: string) => {
+      return new Promise<void>((resolve) => {
         const img = new Image();
         img.src = src;
         img.onload = () => {
           updateProgress();
           resolve();
         };
-        img.onerror = () => reject(`Failed to load image: ${src}`);
+        img.onerror = () => {
+          console.warn(`Failed to load image: ${src}`);
+          updateProgress();
+          resolve();
+        };
       });
-    });
+    };
 
-    const videoPromise = new Promise<void>((resolve, reject) => {
-      const video = document.createElement('video');
-      video.preload = 'auto';
-      video.src = videoSource;
+    const loadVideo = () => {
+      return new Promise<void>((resolve) => {
+        if (videoRef.current) {
+          const video = videoRef.current;
+          video.preload = 'auto';
+          video.src = videoSource;
 
-      let loaded = false;
+          const handleLoaded = () => {
+            updateProgress();
+            resolve();
+          };
 
-      video.onloadeddata = () => {
-        if (!loaded) {
-          loaded = true;
+          video.addEventListener('canplay', handleLoaded, { once: true });
+          video.addEventListener('error', () => {
+            console.warn('Video loading failed, but continuing...');
+            updateProgress();
+            resolve();
+          });
+
+          // 이미 'canplay' 상태라면 즉시 resolve
+          if (video.readyState >= 3) {
+            handleLoaded();
+          }
+        } else {
+          console.warn('Video element not found');
           updateProgress();
           resolve();
         }
-      };
-
-      video.oncanplaythrough = () => {
-        if (!loaded) {
-          loaded = true;
-          updateProgress();
-          resolve();
-        }
-      };
-
-      video.onerror = () => reject(`Failed to load video: ${videoSource}`);
-    });
-
-    const timeoutPromise = new Promise<void>((_, reject) => {
-      setTimeout(() => reject('Loading timed out'), 30000); // 30 seconds timeout
-    });
-
-    Promise.race([
-      Promise.all([...imagePromises, videoPromise]),
-      timeoutPromise
-    ])
-      .then(() => setIsLoading(false))
-      .catch(error => {
-        console.error('Loading error:', error);
-        setError('리소스 로딩 중 오류가 발생했습니다. 새로고침을 해주세요.');
-        setIsLoading(false);
       });
+    };
+
+    Promise.all([
+      ...imageSources.map(loadImage),
+      loadVideo()
+    ]).then(() => {
+      setIsLoading(false);
+    }).catch(error => {
+      console.error('Loading error:', error);
+      setError('일부 리소스 로딩에 실패했습니다. 계속 진행하시겠습니까?');
+      setIsLoading(false);
+    });
+
   }, []);
 
   const handleStart = () => {
-    if (!isLoading && !error) {
+    if (!isLoading) {
+      if (videoRef.current) {
+        videoRef.current.play().catch(e => console.error('Video playback failed', e));
+      }
       onStart();
     }
   };
 
   return (
     <div className={styles.loadingScreen}>
+      <video ref={videoRef} style={{ display: 'none' }} playsInline />
       {isLoading ? (
         <div className={styles.loader}>
           <p>Loading... {progress.toFixed(0)}%</p>
@@ -100,6 +111,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
       ) : error ? (
         <div className={styles.error}>
           <p>{error}</p>
+          <button onClick={handleStart}>계속하기</button>
           <button onClick={() => window.location.reload()}>새로고침</button>
         </div>
       ) : (

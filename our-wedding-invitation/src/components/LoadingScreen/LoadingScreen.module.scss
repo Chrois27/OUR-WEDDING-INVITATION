@@ -22,7 +22,7 @@
     color: #d32f2f;
   
     button {
-      margin-top: 15px;
+      margin: 15px 10px 0;
       padding: 10px 20px;
       background-color: #f44336;
       color: white;
@@ -32,6 +32,14 @@
   
       &:hover {
         background-color: #d32f2f;
+      }
+  
+      &:first-of-type {
+        background-color: #4CAF50;
+  
+        &:hover {
+          background-color: #45a049;
+        }
       }
     }
   }
