@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './LoadingScreen.module.scss';
 
 interface LoadingScreenProps {
@@ -9,7 +9,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const imageSources = [
@@ -22,88 +21,45 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
       '/images/GalleryIMG6.png'
     ];
 
-    const videoSource = '/videos/ourStory.mov';
-
     let loadedCount = 0;
-    const totalCount = imageSources.length + 1; // Images + Video
-
-    const updateProgress = () => {
-      loadedCount++;
-      setProgress((loadedCount / totalCount) * 100);
-    };
+    const totalCount = imageSources.length;
 
     const loadImage = (src: string) => {
       return new Promise<void>((resolve) => {
         const img = new Image();
         img.src = src;
         img.onload = () => {
-          updateProgress();
+          loadedCount++;
+          setProgress((loadedCount / totalCount) * 100);
           resolve();
         };
         img.onerror = () => {
           console.warn(`Failed to load image: ${src}`);
-          updateProgress();
+          loadedCount++;
+          setProgress((loadedCount / totalCount) * 100);
           resolve();
         };
       });
     };
 
-    const loadVideo = () => {
-      return new Promise<void>((resolve) => {
-        if (videoRef.current) {
-          const video = videoRef.current;
-          video.preload = 'auto';
-          video.src = videoSource;
-
-          const handleLoaded = () => {
-            updateProgress();
-            resolve();
-          };
-
-          video.addEventListener('canplay', handleLoaded, { once: true });
-          video.addEventListener('error', () => {
-            console.warn('Video loading failed, but continuing...');
-            updateProgress();
-            resolve();
-          });
-
-          // 이미 'canplay' 상태라면 즉시 resolve
-          if (video.readyState >= 3) {
-            handleLoaded();
-          }
-        } else {
-          console.warn('Video element not found');
-          updateProgress();
-          resolve();
-        }
+    Promise.all(imageSources.map(loadImage))
+      .then(() => setIsLoading(false))
+      .catch(error => {
+        console.error('Loading error:', error);
+        setError('일부 리소스 로딩에 실패했습니다. 계속 진행하시겠습니까?');
+        setIsLoading(false);
       });
-    };
-
-    Promise.all([
-      ...imageSources.map(loadImage),
-      loadVideo()
-    ]).then(() => {
-      setIsLoading(false);
-    }).catch(error => {
-      console.error('Loading error:', error);
-      setError('일부 리소스 로딩에 실패했습니다. 계속 진행하시겠습니까?');
-      setIsLoading(false);
-    });
 
   }, []);
 
   const handleStart = () => {
     if (!isLoading) {
-      if (videoRef.current) {
-        videoRef.current.play().catch(e => console.error('Video playback failed', e));
-      }
       onStart();
     }
   };
 
   return (
     <div className={styles.loadingScreen}>
-      <video ref={videoRef} style={{ display: 'none' }} playsInline />
       {isLoading ? (
         <div className={styles.loader}>
           <p>Loading... {progress.toFixed(0)}%</p>
