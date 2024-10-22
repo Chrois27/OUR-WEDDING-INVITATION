@@ -11,6 +11,10 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
   const [isFixed, setIsFixed] = useState(false);
   const [progress, setProgress] = useState(0);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [isAndroid] = useState(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    return userAgent.includes('android');
+  });
 
   const handleLoaded = useCallback(() => {
     const video = videoRef.current;
@@ -23,6 +27,14 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     const video = videoRef.current;
     if (!video) return;
 
+    if (isAndroid) {
+      // 안드로이드에서는 일반 비디오처럼 재생
+      video.controls = false; // 컨트롤 숨기기
+      video.play().catch(console.error);
+      return;
+    }
+
+    // 웹과 iOS용 스크롤 동작 처리
     video.preload = "auto";
     video.addEventListener('loadedmetadata', handleLoaded);
     video.load();
@@ -30,9 +42,11 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     return () => {
       video.removeEventListener('loadedmetadata', handleLoaded);
     };
-  }, [videoSrc, handleLoaded]);
+  }, [videoSrc, handleLoaded, isAndroid]);
 
   const handleScroll = useCallback(() => {
+    if (isAndroid) return; // 안드로이드에서는 스크롤 처리 무시
+
     const container = containerRef.current;
     const video = videoRef.current;
     if (!container || !video) return;
@@ -55,9 +69,11 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     if (video.duration) {
       video.currentTime = newProgress * video.duration;
     }
-  }, []);
+  }, [isAndroid]);
 
   useEffect(() => {
+    if (isAndroid) return; // 안드로이드에서는 스크롤 이벤트 리스너 추가하지 않음
+
     const throttledHandleScroll = () => {
       requestAnimationFrame(handleScroll);
     };
@@ -68,7 +84,7 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     return () => {
       window.removeEventListener('scroll', throttledHandleScroll);
     };
-  }, [handleScroll]);
+  }, [handleScroll, isAndroid]);
 
   const fadeInOutOpacity = Math.min(1, Math.min(progress, 1 - progress) * 5);
 
@@ -87,6 +103,14 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
       height = '100%';
     }
 
+    if (isAndroid) {
+      return {
+        width: '100%',
+        height: '100vh',
+        objectFit: 'cover' as const,
+      };
+    }
+
     return { 
       width, 
       height,
@@ -94,7 +118,28 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
       maxHeight: '100%',
       objectFit: 'contain' as const
     };
-  }, [dimensions]);
+  }, [dimensions, isAndroid]);
+
+  if (isAndroid) {
+    return (
+      <div className={styles.androidContainer}>
+        <video
+          ref={videoRef}
+          className={styles.androidVideo}
+          src={videoSrc}
+          muted
+          playsInline
+          loop
+          autoPlay
+          style={{
+            width: '100%',
+            height: '100vh',
+            objectFit: 'cover',
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className={styles.scrollVideoContainer}>
