@@ -10,14 +10,11 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFixed, setIsFixed] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [loadError, setLoadError] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  
+
   const handleLoaded = useCallback(() => {
     const video = videoRef.current;
     if (video) {
-      setIsLoaded(true);
       setDimensions({ width: video.videoWidth, height: video.videoHeight });
     }
   }, []);
@@ -27,23 +24,11 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     if (!video) return;
 
     video.preload = "auto";
-
-    const handleCanPlayThrough = () => {
-      setIsLoaded(true);
-      handleLoaded();
-    };
-
-    const handleError = () => {
-      setLoadError("비디오 로딩에 실패했습니다. 스크롤하여 계속 진행할 수 있습니다.");
-    };
-
-    video.addEventListener('canplaythrough', handleCanPlayThrough);
-    video.addEventListener('error', handleError);
+    video.addEventListener('loadedmetadata', handleLoaded);
     video.load();
 
     return () => {
-      video.removeEventListener('canplaythrough', handleCanPlayThrough);
-      video.removeEventListener('error', handleError);
+      video.removeEventListener('loadedmetadata', handleLoaded);
     };
   }, [videoSrc, handleLoaded]);
 
@@ -54,24 +39,23 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
 
     const rect = container.getBoundingClientRect();
     const windowHeight = window.innerHeight;
-    const containerBottom = rect.bottom;
+    const containerTop = rect.top;
     const containerHeight = rect.height;
 
-    // 화면 하단을 기준으로 고정 여부 결정
-    const bottomFixPoint = windowHeight * 2/3;
-    setIsFixed(containerBottom >= bottomFixPoint && containerBottom <= containerHeight);
+    const fixPoint = windowHeight / 3;
 
-    // 스크롤 진행도 계산을 하단 기준으로 변경
-    const totalScrollDistance = containerHeight - windowHeight;
-    const scrolled = window.pageYOffset + windowHeight - rect.top;
+    setIsFixed(containerTop <= fixPoint && containerTop > -containerHeight + windowHeight);
+
+    const totalScrollDistance = containerHeight - windowHeight + fixPoint;
+    const scrolled = fixPoint - containerTop;
     const newProgress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
     
     setProgress(newProgress);
 
-    if (video.duration && isLoaded) {
+    if (video.duration) {
       video.currentTime = newProgress * video.duration;
     }
-  }, [isLoaded]);
+  }, []);
 
   useEffect(() => {
     const throttledHandleScroll = () => {
@@ -103,14 +87,12 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
       height = '100%';
     }
 
-    return {
-      width,
+    return { 
+      width, 
       height,
       maxWidth: '100%',
       maxHeight: '100%',
-      objectFit: 'contain' as const,
-      position: 'relative' as const,
-      bottom: 0
+      objectFit: 'contain' as const
     };
   }, [dimensions]);
 
@@ -118,30 +100,20 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     <div ref={containerRef} className={styles.scrollVideoContainer}>
       <div 
         className={`${styles.scrollVideoWrapper} ${isFixed ? styles.fixed : ''}`}
-        style={{
+        style={{ 
           position: isFixed ? 'fixed' : 'absolute',
-          bottom: isFixed ? '0' : 'auto',
-          top: isFixed ? 'auto' : '0'
+          top: isFixed ? '0' : 'auto',
+          bottom: isFixed ? 'auto' : '0'
         }}
       >
-        {loadError ? (
-          <div className={styles.errorMessage}>{loadError}</div>
-        ) : (
-          <>
-            <video
-              ref={videoRef}
-              className={styles.scrollVideo}
-              src={videoSrc}
-              muted
-              playsInline
-              style={{
-                ...calculateVideoStyle(),
-                display: isLoaded ? 'block' : 'none'
-              }}
-            />
-            {!isLoaded && <div className={styles.loadingPlaceholder}>Loading...</div>}
-          </>
-        )}
+        <video
+          ref={videoRef}
+          className={styles.scrollVideo}
+          src={videoSrc}
+          muted
+          playsInline
+          style={calculateVideoStyle()}
+        />
         <div 
           className={styles.fadeOverlay}
           style={{ opacity: 1 - fadeInOutOpacity }}
