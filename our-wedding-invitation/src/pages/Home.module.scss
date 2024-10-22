@@ -7,7 +7,7 @@
   color: #333333;
 
   .Spacer {
-    height: 20rem; // 여백의 크기를 조절할 수 있습니다.
+    height: 40rem; // 여백의 크기를 조절할 수 있습니다.
     background-color: #ffffff; // 필요하다면 배경색을 설정할 수 있습니다.
   }
 
@@ -30,6 +30,10 @@
   @media (max-width: 768px) {
     .contentWrapper {
       padding: 10px;
+    }
+
+    .Spacer {
+      height: 30rem; // 모바일에서는 여백을 조금 줄일 수 있습니다.
     }
   }
   

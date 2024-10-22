@@ -1,8 +1,9 @@
 .calendarCountdown {
   padding: 2rem;
   background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)
+  
 }
 
 .calendar {
@@ -31,16 +32,16 @@
 }
 
 .calendarDay {
-  &.otherMonth {
-    color: #ccc;
-  }
-
   &.sunday {
     color: rgba(255, 0, 0, 0.553);
   }
 
   &.saturday {
     color: rgba(0, 0, 255, 0.595);
+  }
+
+  &.otherMonth {
+    color: #ccc;
   }
 
   &.weddingDay {
