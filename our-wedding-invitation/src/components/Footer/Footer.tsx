@@ -63,7 +63,7 @@ const Footer: React.FC<FooterProps> = ({ shareUrl, paperInvitationUrl }) => {
         {/* 카카오톡 전용 메타태그 */}
         <meta property="kakao:title" content="신랑 최성국 💖 신부 김보라" />
         <meta property="kakao:description" content="2025년 2월 8일, 우리의 특별한 날에 여러분을 초대합니다." />
-        <meta property="kakao:image" content={`${window.location.origin}/images/MainIMG.png`} />
+        <meta property="kakao:image" content={`${window.location.origin}/images/MainIMG.jpeg`} />
       </Helmet>
       
       <footer className={styles.footer}>
