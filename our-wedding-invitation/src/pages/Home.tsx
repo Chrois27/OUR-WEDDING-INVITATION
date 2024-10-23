@@ -59,10 +59,6 @@ const Home: React.FC = () => {
       />
       <ScrollVideo videoSrc="/videos/ourStory.mov" />
       <div className={styles.Spacer}></div>
-      <div className={styles.Spacer}></div>
-      <div className={styles.Spacer}></div>
-      <div className={styles.Spacer}></div>
-      <div className={styles.Spacer}></div>
       <div className={styles.contentWrapper}>
       <ScrollAnimation>
         <Greeting
@@ -114,7 +110,7 @@ const Home: React.FC = () => {
         <Guidelines items={guidelineItems} />
       </ScrollAnimation>
       </div>
-      <div className={styles.Spacer}></div>
+      <div className={styles.Spacer2}></div>
       <Footer
         shareUrl="https://your-wedding-invitation-url.com"
         paperInvitationUrl="/path/to/paper-invitation.pdf"
