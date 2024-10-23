@@ -77,7 +77,7 @@ const Footer: React.FC<FooterProps> = ({ shareUrl, paperInvitationUrl }) => {
           종이 청첩장 보기
         </a>
         <p className={styles.copyright}>
-          © {new Date().getFullYear()} 신랑자체제작. All rights reserved.
+          © {new Date().getFullYear()} 100퍼센트신랑자체제작모청. All rights reserved.
         </p>
       </footer>
     </>
