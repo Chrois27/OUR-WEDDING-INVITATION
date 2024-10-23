@@ -19,8 +19,12 @@ const Header: React.FC<HeaderProps> = ({ backgroundImage, title, subtitle }) => 
         내 앞에서 웃고 있는 너 <br/>
         그것이 내가 아는 세상의 <br/>
         전부이기를 바란다 <br/>
+        
         </h1>
         <p>- 나태주 &lt; 소망 &gt; 中 - </p>
+        <br/>
+        <br/>
+        <br/>
       </div>
       <div className={styles.guide}>
         <h2>{title}</h2>
