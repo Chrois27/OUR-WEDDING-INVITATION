@@ -23,9 +23,9 @@ const Home: React.FC = () => {
     { src: '/images/GalleryIMG2.jpeg', alt: 'Wedding photo 2' },
     { src: '/images/GalleryIMG3.jpeg', alt: 'Wedding photo 3' },
     { src: '/images/GalleryIMG4.jpeg', alt: 'Wedding photo 4' },
-    { src: '/images/GalleryIMG5.JPG', alt: 'Wedding photo 5' },
-    { src: '/images/GalleryIMG6.JPG', alt: 'Wedding photo 6' },
-    { src: '/images/GalleryIMG7.jpg', alt: 'Wedding photo 7' },
+    { src: '/images/GalleryIMG5.jpeg', alt: 'Wedding photo 5' },
+    { src: '/images/GalleryIMG6.jpeg', alt: 'Wedding photo 6' },
+    { src: '/images/GalleryIMG7.jpeg', alt: 'Wedding photo 7' },
     { src: '/images/GalleryIMG8.jpeg', alt: 'Wedding photo 8' },
     { src: '/images/GalleryIMG9.jpeg', alt: 'Wedding photo 9' }
   ];

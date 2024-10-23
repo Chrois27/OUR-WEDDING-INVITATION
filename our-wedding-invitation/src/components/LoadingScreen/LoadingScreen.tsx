@@ -17,9 +17,9 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
       '/images/GalleryIMG2.jpeg',
       '/images/GalleryIMG3.jpeg',
       '/images/GalleryIMG4.jpeg',
-      '/images/GalleryIMG5.JPG', 
-      '/images/GalleryIMG6.JPG',
-      '/images/GalleryIMG7.jpg',
+      '/images/GalleryIMG5.jpeg', 
+      '/images/GalleryIMG6.jpeg',
+      '/images/GalleryIMG7.jpeg',
       '/images/GalleryIMG8.jpeg',
       '/images/GalleryIMG9.jpeg'
     ];
