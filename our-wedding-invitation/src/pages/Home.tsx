@@ -59,6 +59,10 @@ const Home: React.FC = () => {
       />
       <ScrollVideo videoSrc="/videos/ourStory.mov" />
       <div className={styles.Spacer}></div>
+      <div className={styles.Spacer}></div>
+      <div className={styles.Spacer}></div>
+      <div className={styles.Spacer}></div>
+      <div className={styles.Spacer}></div>
       <div className={styles.contentWrapper}>
       <ScrollAnimation>
         <Greeting
