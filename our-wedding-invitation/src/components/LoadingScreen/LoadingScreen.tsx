@@ -65,7 +65,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
     <div className={styles.loadingScreen}>
       {isLoading ? (
         <div className={styles.loader}>
-          <p>Loading... {progress.toFixed(0)}%</p>
+          <p>추억과 미래를 불러오는 중... {progress.toFixed(0)}%</p>
         </div>
       ) : error ? (
         <div className={styles.error}>
@@ -75,12 +75,13 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
         </div>
       ) : (
         <div className={styles.startContainer}>
+          <p className={styles.startInfo}>
+            저희 두사람의 시작을 함께하시겠습니까?
+          </p>
+          <br/>
           <button className={styles.startButton} onClick={handleStart}>
             시작하기
           </button>
-          <p className={styles.startInfo}>
-            모바일 청첩장을 시작합니다.
-          </p>
         </div>
       )}
     </div>
