@@ -39,8 +39,8 @@
   background: rgba(255, 255, 255, 0.3);
   color: white;
   border: none;
-  padding: 10px;
-  font-size: 20px;
+  padding: 20px;
+  font-size: 50px;
   cursor: pointer;
   transition: background 0.3s ease;
   z-index: 2;
@@ -50,8 +50,8 @@
   }
 
   @media (max-width: 768px) {
-    padding: 15px; // 모바일에서 터치 영역 확대
-    font-size: 24px;
+    padding: 10px; // 모바일에서 터치 영역 확대
+    font-size: 20px;
   }
 }
 
