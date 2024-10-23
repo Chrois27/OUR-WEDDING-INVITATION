@@ -112,7 +112,7 @@ const Home: React.FC = () => {
       </div>
       <div className={styles.Spacer2}></div>
       <Footer
-        shareUrl="https://your-wedding-invitation-url.com"
+        shareUrl="https://our-wedding-invitation-coyv.vercel.app/"
         paperInvitationUrl="/path/to/paper-invitation.pdf"
       />
     </div>
