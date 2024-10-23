@@ -12,13 +12,16 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
 
   useEffect(() => {
     const imageSources = [
-      '/images/MainIMG.png',
-      '/images/GalleryIMG1.png',
-      '/images/GalleryIMG2.png',
-      '/images/GalleryIMG3.png',
-      '/images/GalleryIMG4.png',
-      '/images/GalleryIMG5.png',
-      '/images/GalleryIMG6.png'
+      '/images/MainIMG.jpeg',
+      '/images/GalleryIMG1.jpeg', 
+      '/images/GalleryIMG2.jpeg',
+      '/images/GalleryIMG3.jpeg',
+      '/images/GalleryIMG4.jpeg',
+      '/images/GalleryIMG5.JPG', 
+      '/images/GalleryIMG6.JPG',
+      '/images/GalleryIMG7.jpg',
+      '/images/GalleryIMG8.jpeg',
+      '/images/GalleryIMG9.jpeg'
     ];
 
     let loadedCount = 0;

@@ -27,7 +27,7 @@ const Home: React.FC = () => {
     { src: '/images/GalleryIMG6.JPG', alt: 'Wedding photo 6' },
     { src: '/images/GalleryIMG7.jpg', alt: 'Wedding photo 7' },
     { src: '/images/GalleryIMG8.jpeg', alt: 'Wedding photo 8' },
-    { src: '/images/GalleryIMG9.jpeg', alt: 'Wedding photo 9' },
+    { src: '/images/GalleryIMG9.jpeg', alt: 'Wedding photo 9' }
   ];
   const guidelineItems: React.ReactNode[] = [
     <React.Fragment key="1">
