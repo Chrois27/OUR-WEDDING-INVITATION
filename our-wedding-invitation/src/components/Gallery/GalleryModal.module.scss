@@ -9,6 +9,7 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  touch-action: none; // 스와이프 동작 중 브라우저 기본 동작 방지
 }
 
 .modalContent {
@@ -18,12 +19,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden; // 스와이프 시 이미지가 넘치지 않도록
 }
 
 .modalImage {
   max-width: 90vw;
   max-height: 90vh;
   object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform; // 성능 최적화
 }
 
 .prevButton,
@@ -34,22 +39,30 @@
   background: rgba(255, 255, 255, 0.3);
   color: white;
   border: none;
-  padding: 15px;
-  font-size: 24px;
+  padding: 10px;
+  font-size: 20px;
   cursor: pointer;
   transition: background 0.3s ease;
+  z-index: 2;
 
   &:hover {
     background: rgba(255, 255, 255, 0.5);
   }
+
+  @media (max-width: 768px) {
+    padding: 15px; // 모바일에서 터치 영역 확대
+    font-size: 24px;
+  }
 }
 
 .prevButton {
-  left: 20px;
+  left: 10px;
+  border-radius: 15px;
 }
 
 .nextButton {
-  right: 20px;
+  right: 10px;
+  border-radius: 15px;
 }
 
 .closeButton {
@@ -59,13 +72,20 @@
   background: rgba(255, 255, 255, 0.3);
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 2px 10px;
   font-size: 24px;
   cursor: pointer;
   transition: background 0.3s ease;
+  border-radius: 20px;
+  z-index: 2;
 
   &:hover {
     background: rgba(255, 255, 255, 0.5);
+  }
+
+  @media (max-width: 768px) {
+    padding: 4px 12px;
+    font-size: 28px;
   }
 }
 
@@ -78,6 +98,7 @@
   color: white;
   padding: 5px 10px;
   border-radius: 15px;
+  z-index: 2;
 }
 
 .guide {
@@ -87,8 +108,16 @@
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.7);
   color: white;
-  padding: 10px;
+  padding: 10px 20px;
+  text-align: center;
   border-radius: 5px;
   font-size: 14px;
   cursor: pointer;
+  white-space: nowrap;
+  z-index: 2;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+    padding: 12px 24px;
+  }
 }
