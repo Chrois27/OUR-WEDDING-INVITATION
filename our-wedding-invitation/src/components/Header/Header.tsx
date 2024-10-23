@@ -13,16 +13,14 @@ const Header: React.FC<HeaderProps> = ({ backgroundImage, title, subtitle }) => 
       <div className={styles.backgroundImage} style={{ backgroundImage: `url(${backgroundImage})` }}></div>
       <div className={styles.content}>
         <h1>
-        개미는 <br/>
-        오늘도 <br/>
-        열심히 <br/>
-        일을하네 <br/>
-        개미는 <br/>
-        언제나 <br/>
-        열심히 <br/>
-        일을하네 <br/>
+        많은 것을 알기를 <br/>
+        꿈꾸지 않는다 <br/>
+        다만 지금, 여기 <br/>
+        내 앞에서 웃고 있는 너 <br/>
+        그것이 내가 아는 세상의 <br/>
+        전부이기를 바란다 <br/>
         </h1>
-        <p>- 최성국 &lt; 현재상태 &gt; 中 - </p>
+        <p>- 나태주 &lt; 소망 &gt; 中 - </p>
       </div>
       <div className={styles.guide}>
         <h2>{title}</h2>

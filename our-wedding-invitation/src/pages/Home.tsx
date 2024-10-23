@@ -19,12 +19,15 @@ interface Image {
 const Home: React.FC = () => {
   const weddingDate = '2025-02-08';
   const images: Image[] = [
-    { src: '/images/GalleryIMG1.png', alt: 'Wedding photo 1' },
-    { src: '/images/GalleryIMG2.png', alt: 'Wedding photo 2' },
-    { src: '/images/GalleryIMG3.png', alt: 'Wedding photo 3' },
-    { src: '/images/GalleryIMG4.png', alt: 'Wedding photo 4' },
-    { src: '/images/GalleryIMG5.png', alt: 'Wedding photo 5' },
-    { src: '/images/GalleryIMG6.png', alt: 'Wedding photo 6' },
+    { src: '/images/GalleryIMG1.jpeg', alt: 'Wedding photo 1' },
+    { src: '/images/GalleryIMG2.jpeg', alt: 'Wedding photo 2' },
+    { src: '/images/GalleryIMG3.jpeg', alt: 'Wedding photo 3' },
+    { src: '/images/GalleryIMG4.jpeg', alt: 'Wedding photo 4' },
+    { src: '/images/GalleryIMG5.JPG', alt: 'Wedding photo 5' },
+    { src: '/images/GalleryIMG6.JPG', alt: 'Wedding photo 6' },
+    { src: '/images/GalleryIMG7.jpg', alt: 'Wedding photo 7' },
+    { src: '/images/GalleryIMG8.jpeg', alt: 'Wedding photo 8' },
+    { src: '/images/GalleryIMG9.jpeg', alt: 'Wedding photo 9' },
   ];
   const guidelineItems: React.ReactNode[] = [
     <React.Fragment key="1">
@@ -50,7 +53,7 @@ const Home: React.FC = () => {
   return (
     <div className={styles.home}>
       <Header
-        backgroundImage="/images/MainIMG.png"
+        backgroundImage="/images/MainIMG.jpeg"
         title="신랑 최성국 ❤️ 신부 김보라"
         subtitle="2025년 2월 8일 토요일 저녁 5시 40분"
       />
@@ -84,20 +87,20 @@ const Home: React.FC = () => {
       <ScrollAnimation>
         <AccountInfo
           groom={{
-            name: "성국",
+            name: "최성국",
             account: "신한 110-123-456789"
           }}
           bride={{
-            name: "보라",
+            name: "김보라",
             account: "국민 123-12-1234567"
           }}
           parents={[
             {
-              name: "신랑 부모",
+              name: "최영문 ❤️ 양지명",
               account: "우리 1002-123-456789"
             },
             {
-              name: "신부 부모",
+              name: "김정업 ❤️ 이정임",
               account: "농협 123-4567-8901-23"
             }
           ]}
