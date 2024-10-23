@@ -110,6 +110,7 @@ const Home: React.FC = () => {
         <Guidelines items={guidelineItems} />
       </ScrollAnimation>
       </div>
+      <div className={styles.Spacer}></div>
       <Footer
         shareUrl="https://your-wedding-invitation-url.com"
         paperInvitationUrl="/path/to/paper-invitation.pdf"

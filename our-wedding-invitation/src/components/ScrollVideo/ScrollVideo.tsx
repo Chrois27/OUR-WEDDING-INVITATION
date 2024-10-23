@@ -15,6 +15,8 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     const userAgent = navigator.userAgent.toLowerCase();
     return userAgent.includes('android');
   });
+  const [videoEnded, setVideoEnded] = useState(false);
+  const [shouldStopFixed, setShouldStopFixed] = useState(false);
 
   const handleLoaded = useCallback(() => {
     const video = videoRef.current;
@@ -23,28 +25,35 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     }
   }, []);
 
+  const handleVideoEnded = useCallback(() => {
+    if (isAndroid) {
+      setVideoEnded(true);
+    }
+  }, [isAndroid]);
+
+  const handleReplay = useCallback(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = 0;
+      video.play();
+      setVideoEnded(false);
+    }
+  }, []);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (isAndroid) {
-      video.controls = false;
-      video.play().catch(console.error);
-      return;
-    }
-
-    video.preload = "auto";
+    video.addEventListener('ended', handleVideoEnded);
     video.addEventListener('loadedmetadata', handleLoaded);
-    video.load();
 
     return () => {
+      video.removeEventListener('ended', handleVideoEnded);
       video.removeEventListener('loadedmetadata', handleLoaded);
     };
-  }, [videoSrc, handleLoaded, isAndroid]);
+  }, [handleVideoEnded, handleLoaded]);
 
   const handleScroll = useCallback(() => {
-    if (isAndroid) return;
-
     const container = containerRef.current;
     const video = videoRef.current;
     if (!container || !video) return;
@@ -54,24 +63,47 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     const containerTop = rect.top;
     const containerHeight = rect.height;
 
-    const fixPoint = windowHeight / 3;
+    if (isAndroid) {
+      const containerBottom = rect.bottom;
+      
+      if (containerTop <= 0 && containerBottom >= windowHeight) {
+        if (!isFixed && !videoEnded && !shouldStopFixed) {
+          setIsFixed(true);
+          video.play().catch(console.error);
+        }
+      } else {
+        setIsFixed(false);
+      }
 
-    setIsFixed(containerTop <= fixPoint && containerTop > -containerHeight + windowHeight);
+      if (containerBottom < 0 || containerTop > windowHeight || videoEnded) {
+        setIsFixed(false);
+        setShouldStopFixed(true);
+      }
 
-    const totalScrollDistance = containerHeight - windowHeight + fixPoint;
-    const scrolled = fixPoint - containerTop;
-    const newProgress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
-    
-    setProgress(newProgress);
+      if (containerTop > windowHeight) {
+        setShouldStopFixed(false);
+        setVideoEnded(false);
+      }
+    } else {
+      // 웹과 iOS를 위한 스크롤 기반 비디오 제어
+      const fixPoint = windowHeight / 3;
+      const shouldBeFixed = containerTop <= fixPoint && containerTop > -containerHeight + windowHeight;
+      
+      setIsFixed(shouldBeFixed);
 
-    if (video.duration) {
-      video.currentTime = newProgress * video.duration;
+      const totalScrollDistance = containerHeight - windowHeight + fixPoint;
+      const scrolled = fixPoint - containerTop;
+      const newProgress = Math.max(0, Math.min(1, scrolled / totalScrollDistance));
+      
+      setProgress(newProgress);
+
+      if (video.duration) {
+        video.currentTime = newProgress * video.duration;
+      }
     }
-  }, [isAndroid]);
+  }, [isAndroid, videoEnded, shouldStopFixed]);
 
   useEffect(() => {
-    if (isAndroid) return;
-
     const throttledHandleScroll = () => {
       requestAnimationFrame(handleScroll);
     };
@@ -82,21 +114,9 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
     return () => {
       window.removeEventListener('scroll', throttledHandleScroll);
     };
-  }, [handleScroll, isAndroid]);
+  }, [handleScroll]);
 
   const calculateVideoStyle = useCallback(() => {
-    if (isAndroid) {
-      return {
-        width: '100%',
-        height: '100vh',
-        objectFit: 'cover' as const,
-        position: 'fixed' as const,
-        top: 0,
-        left: 0,
-        zIndex: 1
-      };
-    }
-
     if (dimensions.width === 0 || dimensions.height === 0) return {};
 
     const videoRatio = dimensions.width / dimensions.height;
@@ -118,31 +138,15 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
       maxHeight: '100%',
       objectFit: 'contain' as const
     };
-  }, [dimensions, isAndroid]);
+  }, [dimensions]);
 
-  if (isAndroid) {
-    return (
-      <div className={styles.androidContainer}>
-        <video
-          ref={videoRef}
-          className={styles.androidVideo}
-          src={videoSrc}
-          muted
-          playsInline
-          loop
-          autoPlay
-          style={calculateVideoStyle()}
-        />
-      </div>
-    );
-  }
-
-  const fadeInOutOpacity = Math.min(1, Math.min(progress, 1 - progress) * 5);
+  // 페이드 효과 계산
+  const fadeInOutOpacity = !isAndroid ? Math.min(1, Math.min(progress, 1 - progress) * 5) : 1;
 
   return (
     <div ref={containerRef} className={styles.scrollVideoContainer}>
       <div 
-        className={`${styles.scrollVideoWrapper} ${isFixed ? styles.fixed : ''}`}
+        className={`${styles.videoWrapper} ${isFixed ? styles.fixed : ''}`}
         style={{ 
           position: isFixed ? 'fixed' : 'absolute',
           top: isFixed ? '0' : 'auto',
@@ -151,16 +155,23 @@ const ScrollVideo: React.FC<ScrollVideoProps> = ({ videoSrc }) => {
       >
         <video
           ref={videoRef}
-          className={styles.scrollVideo}
+          className={styles.video}
           src={videoSrc}
           muted
           playsInline
           style={calculateVideoStyle()}
         />
-        <div 
-          className={styles.fadeOverlay}
-          style={{ opacity: 1 - fadeInOutOpacity }}
-        />
+        {isAndroid && videoEnded && isFixed && (
+          <button className={styles.replayButton} onClick={handleReplay}>
+            다시보기
+          </button>
+        )}
+        {!isAndroid && (
+          <div 
+            className={styles.fadeOverlay}
+            style={{ opacity: 1 - fadeInOutOpacity }}
+          />
+        )}
       </div>
     </div>
   );
