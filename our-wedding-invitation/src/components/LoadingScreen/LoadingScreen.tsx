@@ -75,13 +75,15 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
         </div>
       ) : (
         <div className={styles.startContainer}>
-          <p className={styles.startInfo}>
-            저희 두사람의 시작을 함께하시겠습니까?
-          </p>
-          <br/>
+          <div className={styles.startInfo}>
+            <h1>저희 두사람의 시작을 </h1> 
+            <h1>함께하시겠습니까?</h1>
+          </div>
           <button className={styles.startButton} onClick={handleStart}>
             시작하기
           </button>
+          <br/>
+          <h5>아이폰 또는 컴퓨터로 보시면 <br/>조금 더 재밌게 감상이 가능합니다.</h5>
         </div>
       )}
     </div>
