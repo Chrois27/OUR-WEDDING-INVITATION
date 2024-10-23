@@ -30,7 +30,7 @@ const Footer: React.FC<FooterProps> = ({ shareUrl, paperInvitationUrl }) => {
         content: {
           title: '신랑 최성국 💖 신부 김보라',
           description: '2025년 2월 8일, 우리의 특별한 날에 여러분을 초대합니다.',
-          imageUrl: `${window.location.origin}/images/MainIMG.png`,
+          imageUrl: `${window.location.origin}/images/MainIMG.jpeg`,
           link: {
             mobileWebUrl: shareUrl,
             webUrl: shareUrl,
