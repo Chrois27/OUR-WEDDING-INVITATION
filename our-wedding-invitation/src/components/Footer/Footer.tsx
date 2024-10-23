@@ -27,9 +27,9 @@ const Footer: React.FC<FooterProps> = ({ shareUrl, paperInvitationUrl }) => {
       kakaoSDK.Link.sendDefault({
         objectType: 'feed',
         content: {
-          title: '예비신랑 최성국 💖 예비신부 김보라',
+          title: '신랑 최성국 💖 신부 김보라',
           description: '2025년 2월 8일, 우리의 특별한 날에 여러분을 초대합니다.',
-          imageUrl: '%PUBLIC_URL%/MainIMG,png',
+          imageUrl: '%PUBLIC_URL%/MainIMG.jpeg',
           link: {
             mobileWebUrl: shareUrl,
             webUrl: shareUrl,
@@ -62,7 +62,7 @@ const Footer: React.FC<FooterProps> = ({ shareUrl, paperInvitationUrl }) => {
         종이 청첩장 보기
       </a>
       <p className={styles.copyright}>
-        © {new Date().getFullYear()} 신랑 & 신부. All rights reserved.
+        © {new Date().getFullYear()} 신랑자체제작. All rights reserved.
       </p>
     </footer>
   );
