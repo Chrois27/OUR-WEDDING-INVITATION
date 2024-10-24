@@ -64,6 +64,10 @@ const CalendarCountdown: React.FC<CalendarCountdownProps> = ({ weddingDate, dDay
   return (
     <div className={styles.calendarCountdown}>
       <h2>예식 일시</h2>
+      <p className={styles.dateInfo}>
+        2025년 2월 8일 토요일 <br/>
+        저녁 5시 40분
+      </p>
       <div className={styles.calendar}>
         <h3>{weddingDay.format('YYYY년 M월')}</h3>
         <table className={styles.calendarTable}>

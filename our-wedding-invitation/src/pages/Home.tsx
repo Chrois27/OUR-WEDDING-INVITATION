@@ -17,7 +17,7 @@ interface Image {
 }
 
 const Home: React.FC = () => {
-  const weddingDate = '2025-02-08';
+  const weddingDate = '2025-02-08 17:40';
   const images: Image[] = [
     { src: '/images/GalleryIMG1.jpeg', alt: 'Wedding photo 1' },
     { src: '/images/GalleryIMG2.jpeg', alt: 'Wedding photo 2' },
