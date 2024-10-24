@@ -77,7 +77,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onStart }) => {
         <div className={styles.startContainer}>
           <div className={styles.startInfo}>
             <h1>
-            2025년 2월 25일<br/>
+            2025년 2월 8일<br/>
             저희 두사람의 시작을<br/> 
             함께하시겠습니까?</h1>
           </div>
